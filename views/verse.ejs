@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head.ejs') %>
+
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <div class="page">
+
+        <div class="my-verse">
+            <h1><%= verse.chapter %>:<%= verse.verse %></h1>
+            <p><%= verse.text %></p>
+
+            <a href="/verse/<%= verse.chapter %>/edit" >
+                <i class="material-icons">edit</i>
+            </a>
+            
+        </div>
+       
+    </div>
+</body>
+</html>

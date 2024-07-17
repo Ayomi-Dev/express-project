@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head.ejs') %>
+
+
+<body>
+
+    <%- include('../partials/nav.ejs') %>
+
+    
+    <div class="page">
+        <h1>Welcome To My Personalised Bible Verses</h1>
+
+        <div class="verses">
+            <% if (verses.length > 0 ) { %>
+                <% verses.map(verse => { %>
+
+                    <div class="verse-content">
+
+                        <a href="/verse/<%= verse.chapter %> ">
+                            <h2><%= verse.book %><%=verse.chapter %>:<%= verse.verse %></h2>
+                            <span><%= verse.text %></span>
+                        </a>
+                        <div class="action">
+                            <a href="/verse/<%= verse.chapter %>/edit"><i class="material-icons">edit</i></a>
+                            <i class="material-icons">delete</i>
+                        </div>
+                    </div>
+
+               <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <%- include('../partials/head.ejs') %>
+
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <div class="page">
+        <h1>Edit Your Personalised Verse</h1>
+        <form action="/verse/<%= verse.chapter %>/edit" method="POST">
+            <label for=""><%= verse.chapter %>:<%= verse.verse%></label>
+            
+
+            <label for="">Personalise</label>
+            <textarea required name="text"> <%= verse.text %> </textarea>
+    
+    
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>
