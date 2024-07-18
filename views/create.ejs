@@ -3,23 +3,65 @@
 
 <%- include('../partials/head.ejs') %>
 
+
 <body>
     <%- include('../partials/nav.ejs') %>
     <div class="page form">
 
-        <form action="">
-            <label for="">Book</label>
-            <input required type="text">
+        <form action="/" method="POST" id="form">
             <label for="">Chapter</label>
-            <input required type="text">
+            <input required type="text" name="chapter">
             <label for="">Verse</label>
-            <input required type="text">
+            <input required type="text" name="verse">
             <label for="">Personalise</label>
-            <textarea required></textarea>
+            <textarea required name="text"></textarea>
     
-    
+            
             <button type="submit">Personalise</button>
+
         </form>
+        
+         <p id="message"></p>
     </div>
 </body>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('form');
+        form.addEventListener('submit', (e) => {
+            
+
+            const formData = new FormData(form);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value
+            });
+
+            fetch('/verse/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(res => {
+                res.json();
+                console.log(res.json())
+            })
+            .then(result => {
+                const message = document.getElementById('message');
+                if(result.success){
+                    message.innerHTML = result.message
+                    from.reset()
+                }
+                else{
+                    
+                    message.innerText = result.message
+                }
+            })
+            .catch(err => {
+                console.log('Error:', err)
+            })
+        })
+    })
+</script> -->
 </html>
