@@ -34,7 +34,7 @@ app.listen(3000)
 // creating a third-party middleware
 app.use(morgan('dev'));
 
-// settinh up middleware for form submission
+// setting up middleware for form submission
 app.use(express.urlencoded({extended: true}))
 
 // routing using express
@@ -51,25 +51,44 @@ app.get('/', (req, res) => {
     // sending a static file to the browser
     // res.sendFile('index.html', {root:path.join(__dirname, '../pages')});
 
-
     // creating data to pass into ejs file
     const verses = JSON.parse(fs.readFileSync('./public/verses.json'));
     // sending dynamic file to the browser, we use the render() method
-    res.render('index', {title: 'Home', verses}) 
+    res.render('index', {title: 'Home', verses})
 });
 
+
 app.get('/about', (req, res) => {
-    // sending a file/response to the browser
-    // res.sendFile('about.html', {root:path.join(__dirname, '../pages')});
-
-
-    // sending dynamic file to the browser, we use the render() method
     res.render('about', {title: 'about'}) ;
 }); 
 
-app.get('/blogs/create', (req, res) => {
-    res.render('create', {title: 'create'})
-})
+// posting a request to a server to write a new data to a file
+app.get('/verse/create', (req, res) => {
+    res.render('create', {title: 'create', message: null})
+});
+
+app.post('/', (req, res) => {
+    const verses = JSON.parse(fs.readFileSync('./public/verses.json'));
+
+    const newVerse = {
+        chapter: req.body.chapter,
+        verse: req.body.verse,
+        text: req.body.text
+    }
+    verses.push(newVerse);
+
+        // writing new data in the json file
+    fs.writeFile('./public/verses.json', JSON.stringify(verses, null, 2), (err) => {
+        if(err){
+            console.log('Internal err:', err);
+            res.status(500).json({success: false, message:'Internal server error'});
+         }
+        else{
+            res.redirect('/');
+        }
+    });
+});
+
 // redirects using express
 // app.get('/about-us', (req, res) => {
 //     res.redirect('/about');
@@ -103,7 +122,7 @@ app.post('/verse/:chapter/edit', (req, res) => {
         verses[verseIndex].text = req.body.text
         
         // import file module to update changes made to the selected data
-        const fs = require('fs');
+        
         fs.writeFile('./public/verses.json', JSON.stringify(verses, null, 2), (err) =>{
             if(err){
                 console.log('eeror writing to file',err)
@@ -119,6 +138,7 @@ app.post('/verse/:chapter/edit', (req, res) => {
         res.status(404).redirect('404')
     }
 })
+
 
 
 
