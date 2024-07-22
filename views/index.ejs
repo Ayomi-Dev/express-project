@@ -24,7 +24,7 @@
                         </a>
                         <div class="action">
                             <a href="/verse/<%= verse.chapter %>/edit"><i class="material-icons">edit</i></a>
-                            <i class="material-icons">delete</i>
+                            <i class="material-icons delBtn" data-id="<%= verse.chapter %>" >delete</i>
                         </div>
                     </div>
 
@@ -33,4 +33,38 @@
         </div>
     </div>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const delBtn = document.querySelectorAll('.material-icons.delBtn');
+        
+        delBtn.forEach(btn => {
+            
+            btn.addEventListener('click', (e) => {
+                const verseId = e.target.dataset.id
+                const endpoint = `/verse/${verseId}`;
+                
+                fetch(endpoint, {
+                    method: 'DELETE',
+                })
+                .then(res => {
+                   return res.json();
+                })
+                .then(result => {
+                    console.log(result)
+                    // if(result.success){
+                        alert(result.message)
+                        window.location = result.redirect
+                    // }
+                    // else{
+                    //     alert('failed to delete verse')
+                    // }
+                })
+                .catch(err => {
+                    console.log('Error:', err)
+                })
+            })   
+        })
+    })
+</script>
 </html>

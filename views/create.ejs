@@ -8,7 +8,7 @@
     <%- include('../partials/nav.ejs') %>
     <div class="page form">
 
-        <form action="/" method="POST" id="form">
+        <form  method="POST" id="form">
             <label for="">Chapter</label>
             <input required type="text" name="chapter">
             <label for="">Verse</label>
@@ -28,13 +28,16 @@
 <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('form');
+        const message = document.getElementById('message');
         form.addEventListener('submit', (e) => {
-            
+            e.preventDefault()
 
             const formData = new FormData(form);
             const data = {};
+            console.log(data, formData)
 
             formData.forEach((value, key) => {
+                console.log(key, value)
                 data[key] = value
             });
 
@@ -44,19 +47,16 @@
                 body: JSON.stringify(data)
             })
             .then(res => {
-                res.json();
                 console.log(res.json())
+                return res.json();
             })
             .then(result => {
-                const message = document.getElementById('message');
-                if(result.success){
-                    message.innerHTML = result.message
-                    from.reset()
-                }
-                else{
-                    
-                    message.innerText = result.message
-                }
+                
+                console.log(result)
+                message.innerHTML = result.message
+                alert(result.message)
+                window.location = result.redirect
+                
             })
             .catch(err => {
                 console.log('Error:', err)

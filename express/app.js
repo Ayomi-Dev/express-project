@@ -67,7 +67,7 @@ app.get('/verse/create', (req, res) => {
     res.render('create', {title: 'create', message: null})
 });
 
-app.post('/', (req, res) => {
+app.post('/verse/create', (req, res) => {
     const verses = JSON.parse(fs.readFileSync('./public/verses.json'));
 
     const newVerse = {
@@ -76,15 +76,19 @@ app.post('/', (req, res) => {
         text: req.body.text
     }
     verses.push(newVerse);
+    
 
         // writing new data in the json file
     fs.writeFile('./public/verses.json', JSON.stringify(verses, null, 2), (err) => {
+        // res.json({success: true, message:'Verse added succesfully', redirect: '/'});
         if(err){
             console.log('Internal err:', err);
             res.status(500).json({success: false, message:'Internal server error'});
          }
         else{
-            res.redirect('/');
+            console.log(verses)
+            res.redirect('/')
+            // res.json({success: true, message:'Verse added succesfully', redirect: '/'});
         }
     });
 });
@@ -139,7 +143,22 @@ app.post('/verse/:chapter/edit', (req, res) => {
     }
 })
 
+// deleting data from a file
+app.delete('/verse/:chapter', (req, res) => {
+    let verses = JSON.parse(fs.readFileSync('./public/verses.json'));
+    const updatedVerses = verses.filter(verse => verse.chapter !== req.params.chapter);
+    
 
+    fs.writeFile('./public/verses.json', JSON.stringify(updatedVerses, null, 2), (err)=>{
+        if(err){
+            console.log(err)
+            res.status(500).json({success: false, message:'Internal server error'});
+        }
+        else{
+            res.json({success: true, message: 'Post deleted successfully', redirect:'/'})
+        }
+    })
+})
 
 
 // 404 page
