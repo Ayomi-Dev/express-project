@@ -18,13 +18,13 @@
 
                     <div class="verse-content">
 
-                        <a href="/verse/<%= verse.chapter %> ">
+                        <a href="/verses/<%= verse._id%> ">
                             <h2><%= verse.book %><%=verse.chapter %>:<%= verse.verse %></h2>
                             <span><%= verse.text %></span>
                         </a>
                         <div class="action">
-                            <a href="/verse/<%= verse.chapter %>/edit"><i class="material-icons">edit</i></a>
-                            <i class="material-icons delBtn" data-id="<%= verse.chapter %>" >delete</i>
+                            <a href="/verses/<%= verse.chapter %>/edit"><i class="material-icons">edit</i></a>
+                            <i class="material-icons delBtn" data-doc="<%= verse._id %>" >delete</i>
                         </div>
                     </div>
 
@@ -41,8 +41,9 @@
         delBtn.forEach(btn => {
             
             btn.addEventListener('click', (e) => {
-                const verseId = e.target.dataset.id
-                const endpoint = `/verse/${verseId}`;
+                alert('are you sure you want to delete?')
+                const verseId = e.target.dataset.doc
+                const endpoint = `/verses/${verseId}`;
                 
                 fetch(endpoint, {
                     method: 'DELETE',
@@ -51,14 +52,8 @@
                    return res.json();
                 })
                 .then(result => {
-                    console.log(result)
-                    // if(result.success){
-                        alert(result.message)
-                        window.location = result.redirect
-                    // }
-                    // else{
-                    //     alert('failed to delete verse')
-                    // }
+                    alert(result.message)
+                    window.location.href = result.redirect
                 })
                 .catch(err => {
                     console.log('Error:', err)
