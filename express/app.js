@@ -7,8 +7,10 @@ const morgan = require('morgan');
 // importing mongoose
 const mongoose = require('mongoose')
 
-// importing database collection
+// importing model for a database collection
 const Verse = require('../models/verses')
+
+
 // setting up an express app
 const app = express();
 
@@ -18,7 +20,7 @@ const fs = require('fs');
 // setting up database to store verses
 const dbURI = "mongodb+srv://ayomideolakunlea1:nodeproject1234.@node-project.7gmk7.mongodb.net/verse-db?retryWrites=true&w=majority&appName=node-project"
 mongoose.connect(dbURI)
-.then(result => {
+.then(() => {
     console.log('connected to db')
     app.listen(3000)
 })
@@ -35,7 +37,7 @@ const path = require('path');
 
 app.use(morgan('dev')); // creating a third-party middleware
 
-app.use(express.urlencoded({extended: true})) // setting up middleware for form submission
+app.use(express.urlencoded({extended: true})) // setting up middleware to grab form input values
 app.use(express.json())  //allows express to send/receive json data
 
 
@@ -46,37 +48,17 @@ app.use(express.static('public')); // serve static files from a directory
 app.set('views', path.join(__dirname, '../views')); // serve up dynamic files from a view directory
 
 
-app.get('/new-verse', (req, res) => {
-    const verse = new Verse({
-        chapter: 'psalms18',
-        verse: 28,
-        text: 'My darkness is enlightened'
-    })
-    
-})
-
-app.get('/all-verses', (req, res) => {
-    Verse.find() //queries the db and returns all documents in the collection
-    .then(result => {
-        res.send(result)
-    })
-})
-
-app.get('/verse', (req, res) => {
-    Verse.findById("66d5c768dad3a7b12c083220") //queries the db and returns a document that matches the id pased in
-    .then(result => {
-        res.send(result)
-    })
-    .catch(err => console.log(err))
-})
 
 
+
+
+// creating routes
 app.get('/', (req, res) => {
     res.redirect('/verses')
 });
 
 app.get('/verses', (req, res) => {
-    Verse.find().sort({ createdAt: -1 }) //queries the db and returns all documents in the collection from newest to oldest
+    Verse.find().sort({ createdAt: -1 }) //queries the db and returns all documents in the db collection from newest to oldest
     .then((result) => {
         res.render('index', {title: 'Home', verses: result})
     })
@@ -93,11 +75,11 @@ app.get('/verse/create', (req, res) => {
 });
 
 app.post('/verses', (req, res) => {
-    const verse = new Verse( req.body )
+    const verse = new Verse( req.body ) //creates a new intance of the db collection model and sets the form input values as the new document key values
 
     verse.save() //saves the new created document to the db collection
     .then(result => {
-        res.redirect('/');
+        res.redirect('/'); //goes back to homepage to see the new document added
     })
     .catch(err => console.log(err));
     
@@ -107,7 +89,7 @@ app.post('/verses', (req, res) => {
 
 // response for a specific or selected data
 app.get('/verses/:id', (req, res) => {
-    // console.log(req.params.id)
+
     Verse.findById(req.params.id) //queries the db and returns a document that matches the id pased in
     .then(result => {
         const verse = result
@@ -117,13 +99,27 @@ app.get('/verses/:id', (req, res) => {
     
 })
 
-// handling form submission----posting a request to the server
-app.get('/verse/:chapter/edit', (req, res) => {
-    
+// updating an existing document in a database collection
+app.get('/verses/:id/edit', (req, res) => {
+
+    Verse.findById(req.params.id) //queries the db and returns a document that matches the id pased in
+    .then(result => {
+        const verse = result
+        res.render('edit', {title: `${verse.chapter}:${verse.verse}`, verse})
+    })
+    .catch(err => console.log(err))
 });
 
-app.post('/verse/:chapter/edit', (req, res) => {
-    
+app.post('/verses/:id/edit', (req, res) => {
+    const updatedDataId = req.params.id
+    const updatedDocBody = req.body
+
+    Verse.findByIdAndUpdate(updatedDataId, updatedDocBody, {new: true}) //cycles through the collection to returns doc that matches the id and updates new changes made 
+    .then(result => {
+        const verse = result
+        res.render('verse', {title: `${verse.chapter}:${verse.verse}`, verse})
+    })
+    .catch(err => console.log(err))
     
 })
 
