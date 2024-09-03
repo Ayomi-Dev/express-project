@@ -11,9 +11,13 @@
             <h1><%= verse.chapter %>:<%= verse.verse %></h1>
             <p><%= verse.text %></p>
 
-            <a href="/verse/<%= verse.chapter %>/edit" >
-                <i class="material-icons">edit</i>
-            </a>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 50%; margin: 10px auto;">
+
+                <a href="/verses/<%= verse._id %>/edit" >
+                    <i class="material-icons">edit</i>
+                </a>
+                <a href="/" style="color: gray; padding-left: 15px;">Back home</a>
+            </div>
             
         </div>
        

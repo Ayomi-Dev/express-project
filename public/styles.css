@@ -129,17 +129,17 @@ form input, form textarea{
     font-size: 1.2rem;
 }
 form button{
-    width: 60%;
     border-radius: 11px;
     background: rgb(0, 200, 200);
     color: #fff;
     font-weight: 600;
     transition: background 0.5s;
-    padding: 15px;
+    padding: 15px 30px;
     margin: 20px auto;
     text-transform: uppercase;
     border: none;
     outline: none;
+    cursor: pointer;
 }
 .my-verse{
     display: flex;
